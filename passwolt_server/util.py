@@ -25,6 +25,7 @@ STYLE = {
 }
 PASSWOLT_METADATA_DIR = os.path.join(expanduser("~"), ".passwolt")
 SERVER_CONFIG_PATH = os.path.join(PASSWOLT_METADATA_DIR, "server.json")
+PID_FILE_PATH = os.path.join(PASSWOLT_METADATA_DIR, "passwolt-server.pid")
 
 
 def display(text, dedent=True, style=None, end_char=None):
@@ -48,13 +49,15 @@ class Question(object):
     """
     Ask a Question.
     """
-    def __init__(self, text, choices=None, default_choice=None, style=None):
+    def __init__(self, text, choices=None, default_choice=None, style=None,
+                 required=True):
         self._text = text
         style = style or {}
         self._text_style = style.pop('text', [])
         self._text_style = ''.join(map(lambda x: STYLE[x], self._text_style))
         self._choices = choices
         self._default_choice = default_choice
+        self._required = required
         if self._choices:
             assert self._default_choice in self._choices
             self._choices_style = style.pop('choices', [])
@@ -91,6 +94,10 @@ class Question(object):
         ans = input()
         if not ans:
             ans = self._default_choice
+        if not ans and self._required:
+            display("Please enter a value, you cannot leave this answer blank!",
+                    style=["red"])
+            return self.prompt()
         return ans
 
 

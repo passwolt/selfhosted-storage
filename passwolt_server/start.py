@@ -4,7 +4,8 @@ Start Passwolt storage server (only works if installed.)
 
 import os
 
-from passwolt_server.util import display, SERVER_CONFIG_PATH
+from passwolt_server.app import run
+from passwolt_server.util import display, SERVER_CONFIG_PATH, PID_FILE_PATH
 
 
 def _is_installed():
@@ -43,4 +44,13 @@ def start():
             style=["bold", "red"]
         )
 
-    # Start the server in background
+    # Start the server
+    try:
+        # Create a PID file.
+        pid = str(os.getpid())
+        with open(PID_FILE_PATH, 'w') as f:
+            f.write(pid)
+        run()
+    finally:
+        # Remove the PID file.
+        os.unlink(PID_FILE_PATH)

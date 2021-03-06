@@ -49,7 +49,7 @@ def install():
                      choices=["127.0.0.1", "0.0.0.0"],
                      default_choice="127.0.0.1")
     host = qhost.prompt()
-    qport = Question("What port to bind to?")
+    qport = Question("What port to bind to?", default_choice="5544")
     port = qport.prompt()
     qauto_start = Question("Should the server auto-start from the next boot?",
                            choices=["yes", "no"],

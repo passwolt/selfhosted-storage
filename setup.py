@@ -30,6 +30,8 @@ setup(
         'Topic :: Security',
     ],
     install_requires = [
+        "flask",
+        "psutil"
     ],
     entry_points = {
         'console_scripts': [
