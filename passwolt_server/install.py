@@ -12,11 +12,10 @@ Arguments
 
 """
 
+from passwolt_server.util import display, Question, store_config
 
-from util import display, Question
 
-
-def main():
+def install():
     display("""
     ************************************************************************
     ########################################################################
@@ -28,7 +27,7 @@ def main():
 
     ########################################################################
     ************************************************************************
-    """, style=['blue'])
+    """, style=["blue"])
     display(
         "Passwolt server is a self hosted and managed server to store "
         "encrypted passwords."
@@ -41,14 +40,14 @@ def main():
           not stored anywhere in the cloud.
           However, if you don't have such a requirement, considering storing
           these on some cloud storage like Google Drive (securely).
-        """, style=['bold']
+        """, style=["bold"]
     )
     display("Starting installation...")
     qloc = Question("Where do you want to store the encrypted passwords?")
     location = qloc.prompt()
     qhost = Question("What host to bind to?",
-                     choices=['127.0.0.1', '0.0.0.0'],
-                     default_choice='127.0.0.1')
+                     choices=["127.0.0.1", "0.0.0.0"],
+                     default_choice="127.0.0.1")
     host = qhost.prompt()
     qport = Question("What port to bind to?")
     port = qport.prompt()
@@ -56,7 +55,17 @@ def main():
                            choices=["yes", "no"],
                            default_choice="yes")
     auto_start = qauto_start.prompt()
-
-
-if __name__ == '__main__':
-    main()
+    store_config(
+        {
+            "path": location,
+            "host": host,
+            "port": port
+        }
+    )
+    display(
+        "Installation completed successfully!\n"
+        "To start the service, you need to run the following:\n"
+        "  $ passwolt-server start\n\n"
+        "Thank you for installing passwolt! Hope you have a safe journey with us",
+        style=["yellow"]
+    )

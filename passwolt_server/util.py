@@ -4,7 +4,12 @@ Utilities
 
 
 import colorama
+import json
+import os
 import textwrap
+
+from os.path import expanduser
+
 
 colorama.init()    # needed for Windows OS -_-
 
@@ -18,6 +23,8 @@ STYLE = {
     'endc': colorama.Style.RESET_ALL,
     'bold': colorama.Style.BRIGHT
 }
+PASSWOLT_METADATA_DIR = os.path.join(expanduser("~"), ".passwolt")
+SERVER_CONFIG_PATH = os.path.join(PASSWOLT_METADATA_DIR, "server.json")
 
 
 def display(text, dedent=True, style=None, end_char=None):
@@ -85,3 +92,15 @@ class Question(object):
         if not ans:
             ans = self._default_choice
         return ans
+
+
+def store_config(data):
+    """
+    Store the config file
+    """
+    if not os.path.exists(SERVER_CONFIG_PATH):
+        # Create the necessary directories
+        pdir = os.path.dirname(SERVER_CONFIG_PATH)
+        os.makedirs(pdir)
+    with open(SERVER_CONFIG_PATH, 'w') as f:
+        json.dump(data, f)
